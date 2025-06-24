@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -35,19 +36,23 @@ func Add(configFilePath string) *cobra.Command {
 				if name == "" {
 					return errors.New("alias name cannot be empty")
 				}
-				fmt.Print("Command      : ")
-				line, _ = reader.ReadString('\n')
-				command = strings.TrimSpace(line)
+
+				fmt.Println("Enter command (Ctrl+D to finish):")
+				bytes, err := io.ReadAll(reader)
+				if err != nil && err != io.EOF {
+					return fmt.Errorf("failed reading command: %w", err)
+				}
+				command = strings.TrimSpace(string(bytes))
 			default:
 				return errors.New("usage: shcut add [name] [command]")
 			}
 
-			cfg, err := internals.LoadConfig(configFilePath)
+			config, err := internals.LoadConfig(configFilePath)
 			if err != nil {
 				return err
 			}
 
-			if _, exists := cfg[name]; exists {
+			if _, exists := config[name]; exists {
 				fmt.Printf("Alias '%s' exists – overwrite? (y/N): ", name)
 				ans, _ := reader.ReadString('\n')
 				ans = strings.TrimSpace(strings.ToLower(ans))
@@ -57,8 +62,8 @@ func Add(configFilePath string) *cobra.Command {
 				}
 			}
 
-			cfg[name] = command
-			if err := internals.SaveConfig(cfg, configFilePath); err != nil {
+			config[name] = command
+			if err := internals.SaveConfig(config, configFilePath); err != nil {
 				return err
 			}
 			log.Infof("saved: %s -> %s", name, command)
