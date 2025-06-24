@@ -1,0 +1,2 @@
+# shcut - manage aliases
+
