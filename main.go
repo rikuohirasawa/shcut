@@ -46,6 +46,6 @@ func init() {
 }
 
 func main() {
-	rootCmd.AddCommand(commands.Add(configFilePath), commands.Remove(configFilePath), commands.List(configFilePath), commands.Run(configFilePath))
+	rootCmd.AddCommand(commands.Add(configFilePath), commands.Remove(configFilePath), commands.List(configFilePath), commands.Run(configFilePath), commands.Browse(configFilePath))
 	rootCmd.Execute()
 }

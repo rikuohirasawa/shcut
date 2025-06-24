@@ -15,16 +15,16 @@ func Remove(configFilePath string) *cobra.Command {
 		Args:    cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			name := args[0]
-			aliases, err := internals.LoadConfig(configFilePath)
+			config, err := internals.LoadConfig(configFilePath)
 			if err != nil {
 				return err
 			}
-			if _, exists := aliases[name]; !exists {
+			if _, exists := config[name]; !exists {
 				fmt.Printf("shortcut '%s' does not exist", name)
 				return nil
 			}
-			delete(aliases, name)
-			if err := internals.SaveConfig(aliases, configFilePath); err != nil {
+			delete(config, name)
+			if err := internals.SaveConfig(config, configFilePath); err != nil {
 				return err
 			}
 			return nil
