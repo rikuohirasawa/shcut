@@ -133,7 +133,7 @@ func Tea(config map[string]string) {
 func Browse(configFilePath string) *cobra.Command {
 	return &cobra.Command{
 		Use:     "browse",
-		Aliases: []string{"browse"},
+		Aliases: []string{"browse", "list", "ls", "show"},
 		Short:   "Browse the shortcuts",
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
